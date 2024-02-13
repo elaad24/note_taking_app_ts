@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+## to run the server run : node index.js
+
+## to run the from - vite : npm run dev
+
 - this is a project to practice typescript
 
 in it you can :

@@ -11,6 +11,7 @@ import NoteLayout from "./NoteLayout";
 import Note from "./Note";
 import EditNotes from "./EditNote";
 import Register from "./auth/Register";
+import Login from "./auth/Login";
 
 export type Note = {
   id: string;
@@ -99,6 +100,7 @@ function App() {
     <Container className="my-4">
       <Routes>
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
         <Route
           path="/"
           element={
