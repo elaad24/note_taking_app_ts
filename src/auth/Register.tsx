@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -13,12 +13,22 @@ export default function Register() {
   const [passwordConfirmErrorText, setPasswordConfirmErrorText] =
     useState<String | null>(null);
 
+  const [validate, SetValidate] = useState<boolean>(false);
+
   const formValidation = () => {
+    console.log("form validation started");
+
+    let valid = null;
     if (typeof passwordRef.current !== null) {
       if (passwordRef.current!.value.length < 5) {
+        console.log("short password");
+
         setPasswordErrorText("password must be at least 5 chercters long");
+        valid = false;
       } else if (passwordRef.current!.value.length > 20) {
+        console.log("long  password");
         setPasswordErrorText("password must be shorter the 20 cherecters long");
+        valid = false;
       }
     }
 
@@ -27,13 +37,37 @@ export default function Register() {
         setPasswordConfirmErrorText(
           "the password and password confirm must by identicals"
         );
+        console.log("not the ssame password");
+
+        valid = false;
       }
     }
+
+    if (valid == false) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("submited");
+    }
+    SetValidate(true);
+    formValidation();
   };
   return (
     <>
       <Form
         noValidate
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
+        validated={validate}
         style={{
           border: "1px solid black",
           backgroundColor: "rgb(189, 195, 199)",
@@ -92,7 +126,11 @@ export default function Register() {
             </Form.Group>
           </Row>
           <Row className="justify-content-center">
-            <Button variant="primary" className="w-75 align-items-center">
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-75 align-items-center"
+            >
               sign up
             </Button>
             <span style={{ fontSize: ".95rem" }} className="mt-2">
