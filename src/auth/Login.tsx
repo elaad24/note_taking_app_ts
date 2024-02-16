@@ -1,14 +1,20 @@
 import { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginService } from "../service/authService";
+import axios, { AxiosError } from "axios";
 
 export default function Login() {
+  const nevigate = useNavigate();
+
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [passwordErrorText, setPasswordErrorText] = useState<String | null>(
     null
   );
   const [validate, SetValidate] = useState<boolean>(false);
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const formValidation = () => {
     console.log("form validation started");
@@ -30,15 +36,40 @@ export default function Login() {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
+    e.preventDefault();
     if (form.checkValidity() === false) {
-      e.preventDefault();
       e.stopPropagation();
-      console.log("submited");
     }
     SetValidate(true);
-    formValidation();
+
+    try {
+      if (formValidation()) {
+        const loginReq = await LoginService({
+          username: userNameRef.current!.value,
+          password: passwordRef.current!.value,
+        });
+
+        localStorage.setItem("accessToken", loginReq.data?.accessToken);
+        document.cookie = `accessToken:${
+          loginReq.data?.accessToken
+        }; path=/; expires=${new Date(
+          Date.now() + 900000
+        )} secure; SameSite=Lax`;
+        nevigate("/");
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError;
+        if (axiosError.message !== "wrong info") {
+          setErrorMsg("the user info is wrong plese try again");
+        } else {
+          setErrorMsg(`${axiosError?.message}, plese try again in a few`);
+        }
+        console.error(axiosError?.message);
+      }
+    }
   };
 
   return (
@@ -59,6 +90,21 @@ export default function Login() {
         <Row className="">
           <h2 className="text-center">Login</h2>
         </Row>
+        {errorMsg && (
+          <Row className="">
+            <h2
+              style={{
+                border: "1px solid red",
+                backgroundColor: "white",
+                textTransform: "capitalize",
+                fontSize: "1.2rem",
+              }}
+              className="text-center text-danger rounded"
+            >
+              {errorMsg}
+            </h2>
+          </Row>
+        )}
         <Stack gap={4}>
           <Row>
             <Form.Group as={Col} controlId="userName">

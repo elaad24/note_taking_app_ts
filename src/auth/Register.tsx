@@ -1,8 +1,11 @@
 import React, { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, InputGroup, Row, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { RegisterService } from "../service/authService";
+import ModaComponent from "../ModaComponent";
 
 export default function Register() {
+  const nevigate = useNavigate();
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
@@ -14,7 +17,7 @@ export default function Register() {
     useState<String | null>(null);
 
   const [validate, SetValidate] = useState<boolean>(false);
-
+  const [showModal, setShowModal] = useState<boolean>(false);
   const formValidation = () => {
     console.log("form validation started");
 
@@ -50,15 +53,27 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
+    e.preventDefault();
     if (form.checkValidity() === false) {
-      e.preventDefault();
       e.stopPropagation();
       console.log("submited");
     }
     SetValidate(true);
     formValidation();
+    console.log("form validation:", formValidation());
+
+    if (formValidation()) {
+      await RegisterService({
+        username: userNameRef.current!.value,
+        password: passwordRef.current!.value,
+      });
+      console.log("secseed");
+
+      setShowModal(true);
+      setTimeout(() => nevigate("/login"), 3000);
+    }
   };
   return (
     <>
@@ -140,6 +155,15 @@ export default function Register() {
           </Row>
         </Stack>
       </Form>
+
+      {showModal && (
+        <ModaComponent
+          isOpen={showModal}
+          textHeader="Amazing now you register!"
+          textBody="you will be transferd to login page shortly "
+          showBtns={false}
+        />
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 # React + TypeScript + Vite
 
-## to run the server run : node index.js
+## to run the server run : npm run server
 
 ## to run the from - vite : npm run dev
 
