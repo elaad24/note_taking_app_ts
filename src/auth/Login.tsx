@@ -51,7 +51,6 @@ export default function Login() {
           password: passwordRef.current!.value,
         });
 
-        localStorage.setItem("accessToken", loginReq.data?.accessToken);
         document.cookie = `accessToken:${
           loginReq.data?.accessToken
         }; path=/; expires=${new Date(

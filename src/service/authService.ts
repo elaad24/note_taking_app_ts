@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "./axiosInstence.js";
 
 type userData = {
   username: string;
@@ -6,15 +6,19 @@ type userData = {
 };
 
 export async function RegisterService({ username, password }: userData) {
-  return await axios.post("http://localhost:50001/auth/register", {
+  return await api.post("/auth/register", {
     username,
     password,
   });
 }
 
 export async function LoginService({ username, password }: userData) {
-  return await axios.post("http://localhost:50001/auth/login", {
+  return await api.post("/auth/login", {
     username,
     password,
   });
+}
+
+export function logoutService() {
+  api.delete("/logout");
 }
