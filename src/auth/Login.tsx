@@ -50,12 +50,9 @@ export default function Login() {
           username: userNameRef.current!.value,
           password: passwordRef.current!.value,
         });
-
-        document.cookie = `accessToken:${
+        document.cookie = document.cookie = `accessToken=${
           loginReq.data?.accessToken
-        }; path=/; expires=${new Date(
-          Date.now() + 900000
-        )} secure; SameSite=Lax`;
+        }; path=/; expires=${new Date(Date.now() + 900000)} `;
         nevigate("/");
       }
     } catch (err) {

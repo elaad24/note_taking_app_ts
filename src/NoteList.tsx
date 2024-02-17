@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "./App";
 import styles from "./NotesList.module.css";
+import { test } from "./service/authService";
 
 type NoteListProps = {
   availavleTags: Tag[];
@@ -60,6 +61,7 @@ export default function NoteList({
 
   return (
     <>
+      <Button onClick={async () => await test()}> test button </Button>
       <Row className="align-items-center mb-4">
         <Col>
           <h1>notes</h1>

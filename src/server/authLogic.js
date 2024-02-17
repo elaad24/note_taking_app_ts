@@ -37,8 +37,6 @@ router.post("/login", (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
     });
     res.json({ accessToken });
   } else {
@@ -62,11 +60,15 @@ router.post("/refresh_token", (req, res) => {
 router.delete("/logout", (req, res) => {
   res.cookie("refreshToken", "", {
     httpOnly: true,
-    sameSite: "Strict",
-    secure: true,
     expires: new Date(0),
   });
   res.statusCode(204);
+});
+
+router.get("/test", (req, res) => {
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@");
+  console.log(req);
+  res.send("ok");
 });
 
 export default router;

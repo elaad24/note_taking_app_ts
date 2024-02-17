@@ -12,6 +12,7 @@ import Note from "./Note";
 import EditNotes from "./EditNote";
 import Register from "./auth/Register";
 import Login from "./auth/Login";
+import RequireAuth from "./RequireAuth";
 
 export type Note = {
   id: string;
@@ -101,41 +102,44 @@ function App() {
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <NoteList
-              availavleTags={tags}
-              notes={notesWithTags}
-              onUpdateTag={updateTag}
-              onDeleteTag={deleteTag}
-            />
-          }
-        />
-        <Route
-          path="/new"
-          element={
-            <NewNotes
-              onSubmit={onCreateNote}
-              onAddTag={addTag}
-              availavleTags={tags}
-            />
-          }
-        />
-        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note onDelete={onDeleteNote} />} />
+        <Route element={<RequireAuth />}>
           <Route
-            path="edit"
+            path="/"
             element={
-              <EditNotes
-                onSubmit={onUpdateNote}
+              <NoteList
+                availavleTags={tags}
+                notes={notesWithTags}
+                onUpdateTag={updateTag}
+                onDeleteTag={deleteTag}
+              />
+            }
+          />
+          <Route
+            path="/new"
+            element={
+              <NewNotes
+                onSubmit={onCreateNote}
                 onAddTag={addTag}
                 availavleTags={tags}
               />
             }
           />
+          <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+            <Route index element={<Note onDelete={onDeleteNote} />} />
+            <Route
+              path="edit"
+              element={
+                <EditNotes
+                  onSubmit={onUpdateNote}
+                  onAddTag={addTag}
+                  availavleTags={tags}
+                />
+              }
+            />
+          </Route>
         </Route>
-        <Route path="*" element={<Navigate to={"/"} />} />
+
+        <Route path="*" element={<Navigate to={"/login"} />} />
       </Routes>
     </Container>
   );

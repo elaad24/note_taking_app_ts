@@ -5,4 +5,8 @@ router.get("/", (req, res) => {
   res.json({ message: "Hello from the server!" });
 });
 
+router.post("/test", (req, res) => {
+  res.json({ message: "Hello from the server!" });
+});
+
 export default router;

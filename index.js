@@ -13,8 +13,13 @@ const PORT = process.env.PORT || port;
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// Enable CORS for all origins
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173", // Specify the exact origin
+  credentials: true, // Required to include cookies in cross-origin requests
+};
+
+// Enable CORS for spesific origins
+app.use(cors(corsOptions));
 
 // Webhook route
 app.use("/", api);

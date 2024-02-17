@@ -1,4 +1,4 @@
-import api from "./axiosInstence.js";
+import api from "./axiosInstence";
 
 type userData = {
   username: string;
@@ -21,4 +21,9 @@ export async function LoginService({ username, password }: userData) {
 
 export function logoutService() {
   api.delete("/logout");
+}
+
+export async function test() {
+  const a = await api.get("/auth/test");
+  console.log(a);
 }
